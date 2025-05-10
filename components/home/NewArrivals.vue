@@ -18,11 +18,16 @@
   </template>
   
   <script setup>
+import image1 from "~/assets/images/D.png";
+import image2 from "~/assets/images/F.png";
+import image3 from "~/assets/images/G.png";
+import image4 from "~/assets/images/H.png";
+
   const newArrivals = [
-    { id: 1, title: 'Sneakers', image: '~/assets/images/sneakers.jpg', price: '899.00' },
-    { id: 2, title: 'Jacket', image: '~/assets/images/jacket.jpg', price: '899.00' },
-    { id: 3, title: 'T-Shirt', image: '~/assets/images/tshirt.jpg', price: '899.00' },
-    { id: 4, title: 'Hat', image: '~/assets/images/hat.jpg', price: '899.00' }
+    { id: 1, title: 'Sneakers', image: image1, price: '899.00' },
+    { id: 2, title: 'Jacket', image: image2, price: '899.00' },
+    { id: 3, title: 'T-Shirt', image: image3,price: '899.00' },
+    { id: 4, title: 'Hat', image: image4, price: '899.00' }
   ];
   </script>
   

@@ -1,168 +1,152 @@
 <template>
-    <div :id="id" class="carousel slide">
-      <!-- Carousel indicators (Bootstrap default) -->
-      <div class="carousel-indicators" v-if="showIndicators">
-        <button v-for="i in numberOfIndicators" 
-                :key="`indicator-${i}`"
-                type="button" 
-                :data-bs-target="`#${id}`" 
-                :data-bs-slide-to="i-1" 
-                :class="{ active: i === 1 }" 
-                :aria-current="i === 1 ? 'true' : 'false'"
-                :aria-label="`Slide ${i}`"></button>
-      </div>
-      
-      <!-- Carousel items -->
-      <div class="carousel-inner">
-        <div v-for="(chunk, index) in itemChunks" 
-             :key="`slide-${index}`" 
-             class="carousel-item"
-             :class="{ active: index === 0 }">
-          <div class="row mx-0">
-            <div v-for="(item, itemIndex) in chunk" 
-                 :key="`item-${index}-${itemIndex}`" 
-                 :class="columnClass">
-              <slot name="item" :item="item" :index="itemIndex">
-                <img :src="item.image" class="d-block w-100 " :alt="item.title || `Item ${itemIndex + 1}`">
-              </slot>
+  <!-- The outer div uses a dynamic id so you can instantiate multiple carousels. -->
+  <div
+    :id="carouselId"
+    class="carousel slide"
+    v-bind:data-bs-ride="auto ? 'carousel' : null"
+    :data-bs-interval="interval"
+  >
+    <!-- Indicators (dots below the carousel) -->
+    <div class="carousel-indicators">
+      <button
+        v-for="(slide, index) in groupedSlides"
+        :key="index"
+        type="button"
+        :data-bs-target="'#' + carouselId"
+        :data-bs-slide-to="index"
+        :class="{'active': index === 0}"
+        :aria-current="index === 0 ? 'true' : null"
+        :aria-label="'Slide ' + (index + 1)"
+      ></button>
+    </div>
+
+    <!-- Carousel inner wrapper -->
+    <div class="carousel-inner">
+      <!-- Loop through each slide group (if itemsPerSlide > 1, the group is an array of items) -->
+      <div
+        v-for="(group, groupIndex) in groupedSlides"
+        :key="groupIndex"
+        :class="['carousel-item', { active: groupIndex === 0 }]"
+      >
+        <!-- If multiple items per slide, wrap in a Bootstrap grid row -->
+        <div v-if="itemsPerSlide > 1" class="row">
+          <div
+            v-for="(item, itemIndex) in group"
+            :key="itemIndex"
+            class="col"
+          >
+            <img
+              :src="item.img"
+              class="d-block w-100"
+              :alt="item.alt || 'Slide Image'"
+            />
+            <!-- Optional caption if provided -->
+            <div v-if="item.caption" class="carousel-caption">
+              <p>{{ item.caption }}</p>
             </div>
           </div>
         </div>
+
+        <!-- Single item slide (banner style) -->
+        <div v-else>
+          <img
+            :src="group[0].img"
+            class="d-block w-100"
+            :alt="group[0].alt || 'Slide Image'"
+          />
+          <div v-if="group[0].caption" class="carousel-caption">
+            <p>{{ group[0].caption }}</p>
+          </div>
+        </div>
       </div>
-      
-      <!-- Carousel controls -->
-      <template v-if="showControls">
-        <!-- Default arrow controls -->
-        <template v-if="controlType === 'arrow'">
-          <button class="carousel-control-prev" type="button" :data-bs-target="`#${id}`" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" :data-bs-target="`#${id}`" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </template>
-        
-        <!-- Custom button controls -->
-        <template v-else-if="controlType === 'button'">
-          <button class="carousel-control-prev" type="button" :data-bs-target="`#${id}`" data-bs-slide="prev">
-            <slot name="prev-button">
-              <span>Previous</span>
-            </slot>
-          </button>
-          <button class="carousel-control-next" type="button" :data-bs-target="`#${id}`" data-bs-slide="next">
-            <slot name="next-button">
-              <span>Next</span>
-            </slot>
-          </button>
-        </template>
-      </template>
     </div>
-  </template>
-  
-  <script setup>
-  import { computed } from 'vue';
-  
-  // Props definition
-  const props = defineProps({
-    items: {
+
+    <!-- Carousel controls (arrows) are shown or hidden based on the showControls prop -->
+    <button
+      v-if="showControls"
+      class="carousel-control-prev"
+      type="button"
+      :data-bs-target="'#' + carouselId"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      v-if="showControls"
+      class="carousel-control-next"
+      type="button"
+      :data-bs-target="'#' + carouselId"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Carousel",
+  /*
+    Props:
+      - slides: An array of slide item objects. Each item should have at least an "img" property.
+                For grouped slides (grid or grouped carousels), pass all items in one flat array.
+      - itemsPerSlide (Number): Defines how many items appear per slide.
+          • For a full-width banner, use 1.
+          • For a grid or grouped carousel, use 4.
+      - showControls (Boolean): Determines whether to display the left/right navigation buttons.
+      - interval (Number): Sets the auto-slide interval in milliseconds.
+      - auto (Boolean): If true, the carousel will auto-slide (useful for the banner carousel).
+      - carouselId (String): Useful for having multiple unique carousel instances on one page.
+  */
+  props: {
+    slides: {
       type: Array,
-      required: true
+      required: true,
     },
-    id: {
-      type: String,
-      required: true
-    },
-    itemsPerRow: {
+    itemsPerSlide: {
       type: Number,
-      default: 5,
-      description: 'Number of items to show in each row'
-    },
-    numberOfIndicators: {
-      type: Number,
-      default: 5,
-      description: 'Number of indicators to show'
+      default: 1,
     },
     showControls: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    showIndicators: {
+    interval: {
+      type: Number,
+      default: 5000,
+    },
+    auto: {
       type: Boolean,
-      default: true
+      default: false,
     },
-    controlType: {
+    carouselId: {
       type: String,
-      default: 'arrow',
-      validator: (value) => ['arrow', 'button'].includes(value)
-    }
-  });
-  
-  // Calculate how many items should be in each chunk based on the number of indicators
-  const itemsPerChunk = computed(() => {
-    // If we have more indicators than needed, use 1 item per chunk
-    if (props.numberOfIndicators >= props.items.length) {
-      return 1;
-    }
-    
-    // Otherwise, distribute items evenly
-    return Math.ceil(props.items.length / props.numberOfIndicators);
-  });
-  
-  // Split items into chunks
-  const itemChunks = computed(() => {
-    const chunks = [];
-    const totalItems = props.items.length;
-    
-    for (let i = 0; i < totalItems; i += itemsPerChunk.value) {
-      let chunk = props.items.slice(i, i + itemsPerChunk.value);
-      
-      // If this is the last chunk and it's not full, add items from the beginning
-      if (chunk.length < itemsPerChunk.value && i + itemsPerChunk.value >= totalItems) {
-        const remaining = itemsPerChunk.value - chunk.length;
-        const loopItems = props.items.slice(0, remaining);
-        chunk = [...chunk, ...loopItems];
+      default: "carouselExampleIndicators",
+    },
+  },
+  computed: {
+    // Group the slides array into chunks based on itemsPerSlide.
+    groupedSlides() {
+      if (this.itemsPerSlide === 1) {
+        // Return an array where each element is a one-item array
+        return this.slides.map((slide) => [slide]);
+      } else {
+        const groups = [];
+        for (let i = 0; i < this.slides.length; i += this.itemsPerSlide) {
+          groups.push(this.slides.slice(i, i + this.itemsPerSlide));
+        }
+        return groups;
       }
-      
-      chunks.push(chunk);
-    }
-    
-    return chunks;
-  });
-  
-  // Compute the appropriate column class based on itemsPerRow
-  const columnClass = computed(() => {
-    // For standard Bootstrap grid (12 columns)
-    if (props.itemsPerRow <= 12 && 12 % props.itemsPerRow === 0) {
-      return `col-${Math.floor(12 / props.itemsPerRow)}`;
-    }
-    
-    // For custom column widths
-    return `col-custom-${props.itemsPerRow}`;
-  });
-  </script>
-  
-  <style scoped>
-  /* Custom column classes for when itemsPerRow doesn't fit Bootstrap's 12-column grid */
-  .col-custom-5 {
-    flex: 0 0 auto;
-    width: 20%; /* 100% / 5 */
-    padding: 0 0.5rem;
-  }
-  
-  .col-custom-3 {
-    flex: 0 0 auto;
-    width: 33.333%; /* 100% / 3 */
-    padding: 0 0.5rem;
-  }
-  
-  .col-custom-7 {
-    flex: 0 0 auto;
-    width: 14.285%; /* 100% / 7 */
-    padding: 0 0.5rem;
-  }
-  
-  /* Add more custom column classes as needed */
-  </style>
-  
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* You can customize the spacing or responsiveness of the grid items here */
+.carousel-item .col {
+  padding: 0.5rem;
+}
+</style>
