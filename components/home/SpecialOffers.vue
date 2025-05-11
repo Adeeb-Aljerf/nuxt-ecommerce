@@ -1,222 +1,246 @@
 <template>
   <section class="special-offers py-5">
     <div class="container">
-      <h2 class="text-center mb-4">SPECIAL OFFERS</h2>
-      <div
-        id="specialOffersCarousel"
-        class="carousel slide"
-        data-bs-ride="carousel"
-        data-bs-wrap="true"
-      >
-        <!-- Carousel Inner Slides -->
-        <div class="carousel-inner">
-          <div
-            v-for="(slide, slideIndex) in slides"
-            :key="slideIndex"
-            :class="['carousel-item', { active: slideIndex === 0 }]"
-          >
-            <div class="row justify-content-center">
-              <div
-                v-for="(product, index) in slide"
-                :key="product.id"
-                class="col-6 col-md-3 d-flex justify-content-center p-2"
-              >
-                <div class="offer-card text-center">
-                  <img
-                    :src="product.image"
-                    :alt="product.title"
-                    class="img-fluid offer-img"
-                  />
-                  <div class="offer-details mt-2">
-                    <p class="offer-title">Lorem ipsum dolor</p>
-                    <p class="offer-price">
-                      <del class="old-price">AED {{ product.oldPrice }}</del>
-                      <span class="new-price">AED {{ product.newPrice }}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <h2 class="mb-4">SPECIAL OFFERS</h2>
 
-        <!-- Custom Rectangular Indicators (placed below the slide) -->
-        <div class="carousel-indicators custom-indicators mt-3">
-          <button
-            v-for="(slide, index) in slides"
-            :key="index"
-            type="button"
-            data-bs-target="#specialOffersCarousel"
-            :data-bs-slide-to="index"
-            :class="{ active: index === 0 }"
-            :aria-current="index === 0 ? 'true' : undefined"
-            :aria-label="'Slide ' + (index + 1)"
-          ></button>
-        </div>
-
-        <!-- Custom Navigation Controls -->
-        <button
-          class="carousel-control-prev custom-nav"
-          type="button"
-          data-bs-target="#specialOffersCarousel"
-          data-bs-slide="prev"
-        >
-          <span class="custom-nav-icon" aria-hidden="true">&#10094;</span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button
-          class="carousel-control-next custom-nav"
-          type="button"
-          data-bs-target="#specialOffersCarousel"
-          data-bs-slide="next"
-        >
-          <span class="custom-nav-icon" aria-hidden="true">&#10095;</span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
+      <!-- Using the Carousel component with responsive items per slide -->
+      <Carousel
+        :slides="formattedOffers"
+        :items-per-slide="itemsPerSlide"
+        :show-controls="true"
+        :auto="false"
+        carousel-id="specialOffersCarousel"
+      />
     </div>
   </section>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref, onMounted, computed } from 'vue';
 import image1 from "~/assets/images/1.jpg";
 import image2 from "~/assets/images/2.jpg";
 import image3 from "~/assets/images/3.jpg";
 import image4 from "~/assets/images/4.jpg";
-import image5 from "~/assets/images/D.png";
+import image5 from "~/assets/images/F.png";
+import Carousel from "~/components/common/Carousel.vue";
 
-const products = [
-  { id: 1, title: "Pink Handbag", image: image1, oldPrice: "899.00", newPrice: "800.00" },
-  { id: 2, title: "Black Headphones", image: image2, oldPrice: "899.00", newPrice: "800.00" },
-  { id: 3, title: "Elegant Necklace", image: image3, oldPrice: "899.00", newPrice: "800.00" },
-  { id: 4, title: "Home Appliances Set", image: image4, oldPrice: "899.00", newPrice: "800.00" },
-  { id: 5, title: "Sneaker", image: image5, oldPrice: "899.00", newPrice: "800.00" }
+// Responsive items per slide based on screen width
+const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+// Update window width on resize
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    windowWidth.value = window.innerWidth;
+    window.addEventListener('resize', () => {
+      windowWidth.value = window.innerWidth;
+    });
+  }
+});
+
+// Compute items per slide based on screen width
+const itemsPerSlide = computed(() => {
+  if (windowWidth.value < 700) {
+    return 3; // Small devices
+  } else {
+    return 4; // Medium devices and up
+  }
+});
+
+// Special offers product data
+const specialOffers = [
+  { id: 1, title: "Lorem ipsum dolor", image: image1, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 2, title: "Lorem ipsum dolor", image: image2, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 3, title: "Lorem ipsum dolor", image: image3, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 4, title: "Lorem ipsum dolor", image: image4, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 5, title: "Lorem ipsum dolor", image: image5, oldPrice: "899.00", newPrice: "800.00" },
+  // Adding more items to demonstrate multiple slides
+  { id: 6, title: "Lorem ipsum dolor", image: image1, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 7, title: "Lorem ipsum dolor", image: image2, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 8, title: "Lorem ipsum dolor", image: image3, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 9, title: "Lorem ipsum dolor", image: image4, oldPrice: "899.00", newPrice: "800.00" },
+    // Adding more items to demonstrate multiple slides
+  { id: 6, title: "Lorem ipsum dolor", image: image1, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 7, title: "Lorem ipsum dolor", image: image2, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 8, title: "Lorem ipsum dolor", image: image3, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 9, title: "Lorem ipsum dolor", image: image4, oldPrice: "899.00", newPrice: "800.00" },
+    // Adding more items to demonstrate multiple slides
+  { id: 6, title: "Lorem ipsum dolor", image: image1, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 7, title: "Lorem ipsum dolor", image: image2, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 8, title: "Lorem ipsum dolor", image: image3, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 9, title: "Lorem ipsum dolor", image: image4, oldPrice: "899.00", newPrice: "800.00" },
+  
+
+  { id: 10, title: "Lorem ipsum dolor", image: image5, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 11, title: "Lorem ipsum dolor", image: image1, oldPrice: "899.00", newPrice: "800.00" },
+  { id: 12, title: "Lorem ipsum dolor", image: image2, oldPrice: "899.00", newPrice: "800.00" }
 ];
 
-// We want exactly 4 slides displaying 4 items per slide (using a circular sliding window over the 5 products).
-const numSlides = 4;
-const itemsPerSlide = 4;
-
-const slides = computed(() => {
-  const groups = [];
-  for (let start = 0; start < numSlides; start++) {
-    const slide = [];
-    for (let offset = 0; offset < itemsPerSlide; offset++) {
-      slide.push(products[(start + offset) % products.length]);
-    }
-    groups.push(slide);
-  }
-  return groups;
-});
+// Format the offers data for the carousel component
+const formattedOffers = specialOffers.map(item => ({
+  img: item.image,
+  alt: item.title,
+  id: item.id,
+  title: item.title,
+  oldPrice: item.oldPrice,
+  newPrice: item.newPrice
+}));
 </script>
 
 <style scoped>
 /* Overall section styling */
-.special-offers {
-  background-color: #f7f7f7;
-}
+
+
 .special-offers h2 {
-  font-size: 1.75rem;
   font-weight: bold;
-  letter-spacing: 0.1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
 }
 
-/* Offer Card Styling */
-.offer-card {
-  width: 240px;       /* fixed width */
-  height: 320px;      /* overall card height */
+/* Override carousel styling for product display */
+:deep(.carousel-item .col) {
+  padding: 0 0.5rem;
+}
+
+:deep(.carousel-indicators) {
+  z-index: 5;
+  bottom: -3rem;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+:deep(.carousel-control-prev),
+:deep(.carousel-control-next) {
+  z-index: 5;
+}
+
+:deep(.carousel-indicators button) {
+  width: 2rem;
+  height: 0.25rem;
+  background-color: #666666;
+  opacity: 1;
+  margin: 0 0.25rem;
+  border-radius: 0;
+  border-top: 0;
+  border-bottom: 0;
+}
+
+:deep(.carousel-indicators button.active) {
+  background-color: #000000; /* Black color when active */
+}
+
+/* Product card styling */
+:deep(.product-card) {
+  border: none;
+  margin-bottom: 1rem;
   background: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  padding: 10px;
   transition: transform 0.3s;
 }
-.offer-card:hover {
+
+:deep(.product-card:hover) {
   transform: translateY(-4px);
 }
-.offer-img {
-  width: 100%;
-  height: 160px;      /* fixed image height */
+
+:deep(.carousel-item img) {
+  max-height: 15em !important;
   object-fit: cover;
-  border-radius: 8px;
+  padding: 0;
+  border-radius: 8px 8px 0 0;
 }
-.offer-details {
-  margin-top: 10px;
+
+:deep(.product-info) {
+  padding: 0.75rem;
+  text-align: left;
 }
-.offer-title {
+
+:deep(.product-title) {
+  margin-bottom: 0.25rem;
   font-size: 0.9rem;
-  font-weight: bold;
-  margin-bottom: 4px;
   color: #333;
+  font-weight: normal;
 }
-.offer-price {
+
+:deep(.product-price) {
   font-size: 0.85rem;
   color: #555;
 }
-.old-price {
+
+:deep(.product-price del) {
   text-decoration: line-through;
   color: #999;
-  margin-right: 5px;
+  margin-right: 0.5rem;
 }
-.new-price {
-  color: #e74c3c;
+
+:deep(.product-price span) {
   font-weight: bold;
 }
 
-/* Custom Rectangular Indicators */
-.custom-indicators {
-  margin-top: 20px; /* space between the items and the indicators */
-}
-.custom-indicators button {
-  width: 40px;
-  height: 6px;
-  background-color: #ccc;
-  border: none;
-  margin: 0 6px;
-  opacity: 0.6;
-  transition: background-color 0.3s, opacity 0.3s;
-}
-.custom-indicators button.active {
-  background-color: #222;
-  opacity: 1;
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  :deep(.carousel-item .row) {
+    margin: 0 -0.25rem;
+  }
+
+  :deep(.carousel-item .col) {
+    padding: 0 0.25rem;
+  }
+
+  :deep(.carousel-item img) {
+    max-height: 10rem;
+  }
+
+  :deep(.product-title) {
+    font-size: 0.85rem;
+  }
+
+  :deep(.product-price) {
+    font-size: 0.85rem;
+  }
 }
 
-/* Custom Navigation Controls */
-.custom-nav {
-  width: 40px;
-  height: 40px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.9;
-}
-.carousel-control-prev {
-  left: 10px;
-}
-.carousel-control-next {
-  right: 10px;
-}
-.custom-nav:focus {
-  outline: none;
-  box-shadow: none;
-}
-.custom-nav-icon {
-  font-size: 1.5rem;
-  color: #222;
+@media (max-width: 767px) {
+  :deep(.carousel-item img) {
+    max-height: 8rem;
+  }
+
+  :deep(.carousel-indicators) {
+    bottom: -2rem;
+  }
+
+  :deep(.product-title) {
+    font-size: 0.8rem;
+  }
+
+  :deep(.product-price) {
+    font-size: 0.8rem;
+  }
 }
 
-/* Ensure the grid centers items in larger viewports */
-@media (min-width: 768px) {
-  .col-md-3 {
-    display: flex;
-    justify-content: center;
+@media (max-width: 575px) {
+  :deep(.carousel-item img) {
+    max-height: 7rem !important;
+  }
+
+  :deep(.carousel-indicators) {
+    bottom: -1.5rem;
+  }
+
+  :deep(.carousel-indicators button) {
+    width: 1.5rem;
+    height: 0.2rem;
+    margin: 0 0.2rem;
+  }
+
+  :deep(.product-title) {
+    font-size: 0.5rem !important;
+  }
+
+  :deep(.product-price) {
+    font-size: 0.6rem !important;
   }
 }
 </style>

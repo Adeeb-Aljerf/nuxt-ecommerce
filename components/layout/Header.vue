@@ -40,7 +40,7 @@
               <NuxtLink class="nav-link" to="/contact">Contact Us</NuxtLink>
             </li>
             <li class="nav-item">
-              <NuxtLink class="nav-link" to="/ar">AR</NuxtLink>
+              <NuxtLink class="nav-link fw-bold ">AR</NuxtLink>
             </li>
           </ul>
         </div>
@@ -96,9 +96,10 @@
         </div>
       </div>
 
-      <!-- Collapsible Mobile Menu -->
+      <!-- Improved Collapsible Mobile Menu -->
       <div id="mobileNavbar" class="collapse d-lg-none">
-        <ul class="nav flex-column text-center py-3">
+        <!-- Main navigation links -->
+        <ul class="nav flex-column text-center py-2">
           <li class="nav-item">
             <NuxtLink class="nav-link" to="/">Home</NuxtLink>
           </li>
@@ -115,51 +116,86 @@
             <NuxtLink class="nav-link" to="/ar">AR</NuxtLink>
           </li>
         </ul>
-        <ul class="nav flex-column text-center">
-          <!-- Loading state -->
-          <li v-if="loading" class="nav-item">
-            <span class="nav-link">Loading categories...</span>
-          </li>
-          <!-- Error state -->
-          <li v-else-if="error" class="nav-item">
-            <span class="nav-link text-danger">Failed to load categories</span>
-          </li>
-          <!-- Categories list -->
-          <template v-else>
-            <li v-for="category in categories" :key="category.id" class="nav-item">
-              <NuxtLink class="nav-link category-link" :to="category.url">
-                {{ category.name.toUpperCase() }}
-              </NuxtLink>
-            </li>
-          </template>
-        </ul>
-        <div class="d-flex flex-column align-items-center py-3">
-          <div class="search-wrapper mb-3">
-            <div class="search-container">
-              <input
-                v-model="searchInput"
-                class="search-input"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-                @keyup.enter="handleSearch"
-              >
-              <button class="search-button" type="button" @click="handleSearch">
-                <img src="~/assets/icons/Search Mouve.png" alt="Search" class="search-icon">
-              </button>
+
+        <!-- Toggle sections -->
+        <div class="mobile-toggles">
+          <!-- Categories toggle section -->
+          <div class="mobile-section">
+            <button
+              class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center mb-2"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#mobileCategories"
+              aria-expanded="false"
+            >
+              <span>Categories</span>
+              <span>▼</span>
+            </button>
+            <div id="mobileCategories" class="collapse">
+              <ul class="nav flex-column text-center">
+                <!-- Loading state -->
+                <li v-if="loading" class="nav-item">
+                  <span class="nav-link">Loading categories...</span>
+                </li>
+                <!-- Error state -->
+                <li v-else-if="error" class="nav-item">
+                  <span class="nav-link text-danger">Failed to load categories</span>
+                </li>
+                <!-- Categories list -->
+                <template v-else>
+                  <li v-for="category in categories" :key="category.id" class="nav-item">
+                    <NuxtLink class="nav-link category-link" :to="category.url">
+                      {{ category.name.toUpperCase() }}
+                    </NuxtLink>
+                  </li>
+                </template>
+              </ul>
             </div>
           </div>
-          <div class="d-flex justify-content-center gap-3">
-            <NuxtLink to="/profile" class="icon-link">
-              <img src="~/assets/icons/Login.png" alt="Profile" class="header-icon">
-            </NuxtLink>
-            <NuxtLink to="/favorites" class="icon-link">
-              <img src="~/assets/icons/heart_11613265.png" alt="Favorites" class="header-icon">
-            </NuxtLink>
-            <NuxtLink to="/cart" class="icon-link">
-              <img src="~/assets/icons/Cart.png" alt="Cart" class="header-icon">
-            </NuxtLink>
+
+          <!-- Search toggle section -->
+          <div class="mobile-section">
+            <button
+              class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center mb-2"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#mobileSearch"
+              aria-expanded="false"
+            >
+              <span>Search</span>
+              <span>▼</span>
+            </button>
+            <div id="mobileSearch" class="collapse">
+              <div class="search-wrapper w-100 mb-2">
+                <div class="search-container w-100">
+                  <input
+                    v-model="searchInput"
+                    class="search-input"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                    @keyup.enter="handleSearch"
+                  >
+                  <button class="search-button" type="button" @click="handleSearch">
+                    <img src="~/assets/icons/Search Mouve.png" alt="Search" class="search-icon">
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <!-- Icons always visible -->
+        <div class="d-flex justify-content-center gap-4 py-2">
+          <NuxtLink to="/profile" class="icon-link">
+            <img src="~/assets/icons/Login.png" alt="Profile" class="header-icon-mobile">
+          </NuxtLink>
+          <NuxtLink to="/favorites" class="icon-link">
+            <img src="~/assets/icons/heart_11613265.png" alt="Favorites" class="header-icon-mobile">
+          </NuxtLink>
+          <NuxtLink to="/cart" class="icon-link">
+            <img src="~/assets/icons/Cart.png" alt="Cart" class="header-icon-mobile">
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -219,9 +255,17 @@ const handleSearch = () => {
   padding: 0.5rem 0;
   width: 120px;
 }
-
+@media (max-width: 1200px) {
+.header-container{
+  padding:0 0.8rem;
+}
+.category-link {
+ font-size: 0.7rem !important;
+ padding:0 !important;
+}
+}
 /* Responsive styles */
-@media (max-width: 992px) {
+@media (max-width: 1000px) {
   .header-grid {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
@@ -393,5 +437,34 @@ const handleSearch = () => {
   top: 1rem;
   right: 1rem;
   z-index: 1050;
+}
+
+/* Mobile navigation styles */
+.mobile-toggles {
+  padding: 0.5rem 1rem;
+}
+
+.mobile-section {
+  margin-bottom: 0.5rem;
+}
+
+.header-icon-mobile {
+  height: 1.5rem;
+  width: auto;
+}
+
+#mobileNavbar {
+  border-top: 1px solid #e5e5e5;
+  margin-top: 0.5rem;
+}
+
+#mobileNavbar .nav-link {
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+#mobileCategories .nav-link,
+#mobileSearch .search-input {
+  font-size: 0.85rem;
 }
 </style>

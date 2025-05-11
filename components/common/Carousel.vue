@@ -35,14 +35,23 @@
             :key="itemIndex"
             class="col"
           >
-            <img
-              :src="item.img"
-              class="d-block w-100"
-              :alt="item.alt || 'Slide Image'"
-            />
-            <!-- Optional caption if provided -->
-            <div v-if="item.caption" class="carousel-caption">
-              <p>{{ item.caption }}</p>
+            <div class="product-card">
+              <img
+                :src="item.img"
+                class="d-block w-100"
+                :alt="item.alt || 'Slide Image'"
+              >
+              <!-- Product information -->
+              <div class="product-info">
+                <p class="product-title">{{ item.title || item.caption || '' }}</p>
+                <!-- Regular price display -->
+                <p v-if="item.price && !item.oldPrice" class="product-price">AED {{ item.price }}</p>
+                <!-- Special offer price display with old and new price -->
+                <p v-if="item.oldPrice && item.newPrice" class="product-price">
+                  <del>AED {{ item.oldPrice }}</del>
+                  <span>AED {{ item.newPrice }}</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -53,7 +62,7 @@
             :src="group[0].img"
             class="d-block w-100"
             :alt="group[0].alt || 'Slide Image'"
-          />
+          >
           <div v-if="group[0].caption" class="carousel-caption">
             <p>{{ group[0].caption }}</p>
           </div>
@@ -61,45 +70,67 @@
       </div>
     </div>
 
-    <!-- Carousel controls (arrows) are shown or hidden based on the showControls prop -->
-    <button
-      v-if="showControls"
-      class="carousel-control-prev"
-      type="button"
-      :data-bs-target="'#' + carouselId"
-      data-bs-slide="prev"
-    >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button
-      v-if="showControls"
-      class="carousel-control-next"
-      type="button"
-      :data-bs-target="'#' + carouselId"
-      data-bs-slide="next"
-    >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+<!-- Prev button -->
+<button
+  v-if="showControls"
+  type="button"
+  :data-bs-target="'#' + carouselId"
+  data-bs-slide="prev"
+  style="
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    width: clamp(2rem, 8vw, 3rem);
+    height: clamp(2rem, 8vw, 3rem);
+    background: #fff;
+    border: 1px solid #000;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    line-height: 1;
+    cursor: pointer;
+  "
+>
+  ←
+  <span class="visually-hidden">Previous</span>
+</button>
+
+<!-- Next button -->
+<button
+  v-if="showControls"
+  type="button"
+  :data-bs-target="'#' + carouselId"
+  data-bs-slide="next"
+  style="
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    width: clamp(2rem, 8vw, 3rem);
+    height: clamp(2rem, 8vw, 3rem);
+    background: #fff;
+    border: 1px solid #000;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    line-height: 1;
+    cursor: pointer;
+  "
+>
+  →
+  <span class="visually-hidden">Next</span>
+</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "Carousel",
-  /*
-    Props:
-      - slides: An array of slide item objects. Each item should have at least an "img" property.
-                For grouped slides (grid or grouped carousels), pass all items in one flat array.
-      - itemsPerSlide (Number): Defines how many items appear per slide.
-          • For a full-width banner, use 1.
-          • For a grid or grouped carousel, use 4.
-      - showControls (Boolean): Determines whether to display the left/right navigation buttons.
-      - interval (Number): Sets the auto-slide interval in milliseconds.
-      - auto (Boolean): If true, the carousel will auto-slide (useful for the banner carousel).
-      - carouselId (String): Useful for having multiple unique carousel instances on one page.
-  */
   props: {
     slides: {
       type: Array,
@@ -149,4 +180,36 @@ export default {
 .carousel-item .col {
   padding: 0.5rem;
 }
+
+/* Product card styling */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: none;
+}
+
+.product-card img {
+  max-height: 12rem;
+  object-fit: contain;
+  padding: 0.5rem;
+}
+
+.product-info {
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.product-title {
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  color: #333;
+}
+
+.product-price {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+/* Carousel indicators styling - removed as this is now handled in the parent components */
 </style>

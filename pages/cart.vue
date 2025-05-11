@@ -52,33 +52,7 @@
       <div class="col-lg-4">
         <CartSummary />
         
-        <div class="card mt-4">
-          <div class="card-body">
-            <h5 class="card-title mb-3">We Accept</h5>
-            <div class="d-flex gap-2">
-              <div class="p-2 border rounded"><i class="bi bi-credit-card" /></div>
-              <div class="p-2 border rounded"><i class="bi bi-paypal" /></div>
-              <div class="p-2 border rounded"><i class="bi bi-apple" /></div>
-              <div class="p-2 border rounded"><i class="bi bi-google" /></div>
-            </div>
-            
-            <hr class="my-3">
-            
-            <h5 class="card-title mb-3">Need Help?</h5>
-            <div class="d-flex align-items-center mb-2">
-              <i class="bi bi-question-circle me-2" />
-              <a href="#" class="text-decoration-none">Shipping Information</a>
-            </div>
-            <div class="d-flex align-items-center mb-2">
-              <i class="bi bi-arrow-return-left me-2" />
-              <a href="#" class="text-decoration-none">Return Policy</a>
-            </div>
-            <div class="d-flex align-items-center">
-              <i class="bi bi-chat-dots me-2" />
-              <a href="#" class="text-decoration-none">Contact Support</a>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
     
