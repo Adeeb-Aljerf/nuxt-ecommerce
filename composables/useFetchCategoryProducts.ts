@@ -1,6 +1,6 @@
 import { ref, onBeforeUnmount } from 'vue'
 import type { CartProduct } from './apiTypes'
-import { API_BASE_URL, transformProduct, handleApiError } from './apiTypes'
+import { API_BASE_URL, transformProduct} from './apiTypes'
 
 export function useFetchCategoryProducts(category: string) {
   const products = ref<CartProduct[]>([])
