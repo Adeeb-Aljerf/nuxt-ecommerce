@@ -2,7 +2,11 @@
 
 A modern e-commerce application built with Nuxt 3, Bootstrap, and the Fake Store API.
 
-## 🚀 Features
+## � Live Demo
+
+https://aj-nuxt-ecommerce.netlify.app/
+
+## �🚀 Features
 
 - **Modern Framework**: Built with Nuxt 3 for optimal performance and developer experience
 - **Responsive Design**: Fully responsive layout that works on all screen sizes
