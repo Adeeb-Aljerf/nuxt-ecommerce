@@ -1,7 +1,7 @@
 <template>
   <section class="see-more my-5">
     <div class=" position-relative p-0">
-      <img src="~/assets/images/jewelry.jpg" alt="Jewelry Promotion" class="img-fluid w-100" />
+      <img src="~/assets/images/Jewelry.jpg" alt="Jewelry Promotion" class="img-fluid w-100" />
       <!-- See More button -->
       <div class="see-more-btn">
         <NuxtLink to="/category/jewelery" class="btn-wrapper">
